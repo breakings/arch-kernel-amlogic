@@ -1,24 +1,19 @@
 name: Build linux-amlogic
-on:
-  #schedule:
-  #  - cron: '0 22 * * 5'
-  workflow_dispatch:
+on: [push, pull_request]
 
 jobs:
   linux-amlogic:
     env:
       BUILD_DIR: /tmp/${{ github.job }}
     runs-on: ubuntu-latest
-    
     container:
       image: archlinux:base-devel-20201129.0.10056
-      
     steps:
     - uses: actions/checkout@v2
-      
+    
     - name: Install need packages
-      run: yes | pacman -Sy --noconfirm --needed aarch64-linux-gnu-gcc
-
+      run: yes | pacman -S --noconfirm --needed base-devel aarch64-linux-gnu-gcc
+    
     - name: Update packages
       run: yes | pacman -Syu --noconfirm
       
@@ -36,10 +31,10 @@ jobs:
         sudo -u nobody env \
         ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- KBUILD_BUILD_HOST=github KBUILD_BUILD_USER=${{ github.repository_owner }} \
         makepkg --syncdeps --noconfirm --config "$GITHUB_WORKSPACE/makepkg.conf"
-        
+    
     - name: List Files
       run: ls -l ${{ env.BUILD_DIR }}
-      
+    
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
