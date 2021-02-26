@@ -17,23 +17,23 @@ jobs:
     - name: Install need packages
       run: yes | pacman -Syu --noconfirm --needed base-devel aarch64-linux-gnu-gcc glibc xmlto docbook-xsl kmod inetutils bc git uboot-tools dtc
       
-    - name: Allow nobody to execute sudo without a password
-      run: 'echo "nobody ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers'
+    - name: Add user
+      run: |
+        useradd -m -G wheel -s /bin/bash builder
+        'echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers'
       
-    #- name: Copy Files
-    #  run: |
-    #    cp -r "$GITHUB_WORKSPACE/${{ github.job }}" "${{ env.BUILD_DIR }}"
-    #    chown nobody:root "${{ env.BUILD_DIR }}"
-        
+    - name: Copy Files
+      run: |
+        cp -r "$GITHUB_WORKSPACE/${{ github.job }}" "${{ env.BUILD_DIR }}"
+        chown builder:root "${{ env.BUILD_DIR }}"
+    
     - name: Make
       run: |
-        chown -R nobody:root ${GITHUB_WORKSPACE}
-        ls -al
-        cd linux-amlogic
-        sudo -u nobody env \
+        cd "${{ env.BUILD_DIR }}"
+        sudo -u builder env \
         ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- KBUILD_BUILD_HOST=github KBUILD_BUILD_USER=${{ github.repository_owner }} \
-        makepkg --syncdeps --noconfirm --config ../makepkg.conf
-        
+        makepkg --syncdeps --noconfirm --config "$GITHUB_WORKSPACE/makepkg.conf"
+    
     - name: List Files
       run: ls -l ${{ env.BUILD_DIR }}
     
@@ -42,3 +42,4 @@ jobs:
       with:
         name: ${{ github.job }}
         path: ${{ env.BUILD_DIR }}/*.pkg.tar.zst
+
