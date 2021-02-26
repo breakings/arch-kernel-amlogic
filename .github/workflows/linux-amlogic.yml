@@ -16,8 +16,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     
-    - name: Update packages
-      run: yes | pacman -Syu --noconfirm
+    #- name: Update packages
+    #  run: yes | pacman -Syu --noconfirm
       
     - name: Install need packages
       run: yes | pacman -S --noconfirm --needed base-devel aarch64-linux-gnu-gcc
