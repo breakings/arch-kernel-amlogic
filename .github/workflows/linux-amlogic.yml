@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@v2
     
     - name: Install need packages
-      run: yes | pacman -S --noconfirm --needed base-devel aarch64-linux-gnu-gcc
+      run: yes | pacman -Sy --noconfirm --needed base-devel aarch64-linux-gnu-gcc
     
     - name: Update packages
       run: yes | pacman -Syu --noconfirm
