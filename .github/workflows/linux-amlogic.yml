@@ -1,5 +1,8 @@
 name: Build linux-amlogic
-on: [push, pull_request]
+on:
+  #schedule:
+  #  - cron: '0 22 * * 5'
+  workflow_dispatch:
 
 jobs:
   linux-amlogic:
