@@ -30,16 +30,19 @@ jobs:
     - name: Make
       run: |
         cd "${{ env.BUILD_DIR }}/linux-amlogic"
-        sudo -u builder env \
-        ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- KBUILD_BUILD_HOST=github KBUILD_BUILD_USER=${{ github.repository_owner }} \
+        su builder 
+        export ARCH=arm64 
+        export CROSS_COMPILE=aarch64-linux-gnu- 
+        export KBUILD_BUILD_HOST=github 
+        export KBUILD_BUILD_USER=${{ github.repository_owner }}
         makepkg --syncdeps --noconfirm --config ../makepkg.conf
     
     - name: List Files
-      run: ls -l ${{ env.BUILD_DIR }}
+      run: ls -l ${{ env.BUILD_DIR }}/linux-amlogic
     
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
         name: ${{ github.job }}
-        path: ${{ env.BUILD_DIR }}/*.pkg.tar.zst
+        path: ${{ env.BUILD_DIR }}/linux-amlogic/*.pkg.tar.zst
 
