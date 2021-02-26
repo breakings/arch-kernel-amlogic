@@ -15,12 +15,12 @@ jobs:
       
     steps:
     - uses: actions/checkout@v2
-    
-    - name: Update packages
-      run: yes | pacman -Syu --noconfirm --ignore glibc
       
     - name: Install need packages
-      run: yes | pacman -S --noconfirm --needed aarch64-linux-gnu-gcc git
+      run: yes | pacman -Sy --noconfirm --needed aarch64-linux-gnu-gcc
+
+    - name: Update packages
+      run: yes | pacman -Syu --noconfirm
       
     - name: Allow nobody to execute sudo without a password
       run: 'echo "nobody ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers'
