@@ -20,19 +20,19 @@ jobs:
     - name: Add user
       run: |
         useradd -m -G wheel -s /bin/bash builder
-        'echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers'
+        echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
       
     - name: Copy Files
       run: |
-        cp -r "$GITHUB_WORKSPACE/${{ github.job }}" "${{ env.BUILD_DIR }}"
-        chown builder:root "${{ env.BUILD_DIR }}"
+        cp -r "$GITHUB_WORKSPACE" "${{ env.BUILD_DIR }}"
+        chown builder:builder "${{ env.BUILD_DIR }}"
     
     - name: Make
       run: |
-        cd "${{ env.BUILD_DIR }}"
+        cd "${{ env.BUILD_DIR }}/linux-amlogic"
         sudo -u builder env \
         ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- KBUILD_BUILD_HOST=github KBUILD_BUILD_USER=${{ github.repository_owner }} \
-        makepkg --syncdeps --noconfirm --config "$GITHUB_WORKSPACE/makepkg.conf"
+        makepkg --syncdeps --noconfirm --config ../makepkg.conf
     
     - name: List Files
       run: ls -l ${{ env.BUILD_DIR }}
