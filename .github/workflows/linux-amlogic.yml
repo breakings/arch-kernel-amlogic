@@ -29,9 +29,11 @@ jobs:
       run: |
         chown nobody:root -R "${GITHUB_WORKSPACE}"
         cd "$GITHUB_WORKSPACE/${{ github.job }}"
+        ls -al
+        ls -al ../
         sudo -u nobody env \
         ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- KBUILD_BUILD_HOST=github KBUILD_BUILD_USER=${{ github.repository_owner }} \
-        makepkg --syncdeps --noconfirm --config "$GITHUB_WORKSPACE/makepkg.conf"
+        makepkg --syncdeps --noconfirm --config ../makepkg.conf
     
     - name: List Files
       run: ls -l ${{ env.BUILD_DIR }}
