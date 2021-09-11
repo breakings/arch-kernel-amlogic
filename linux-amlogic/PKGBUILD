@@ -5,7 +5,7 @@
 
 pkgbase=linux-amlogic
 pkgver=5.10.63
-pkgrel=3
+pkgrel=4
 url="http://www.kernel.org/"
 arch=('aarch64')
 license=('GPL2')
